@@ -43,3 +43,50 @@ angrist <- angrist %>%
 # demonstrate that the data set matches the sample
 print(angrist)
 ```
+
+## Get Summary Statistics  
+```{r frequency distributions}
+# counts and frequency by age
+(
+by_age <- angrist %>%
+    group_by(age_cat) %>% 
+    # get summary statistics
+    summarise(count = n(), 
+              percent = round(n() * 100 / nrow(angrist), 0)) %>% 
+    # add age labels from metadata
+    bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)
+
+# counts and frequency by years of service
+(
+by_service <- angrist %>% 
+    group_by(years_serv_cat) %>% 
+    summarise(count = n(),
+              percent = round(n() * 100 / nrow(angrist), 1)
+              ) %>% 
+    # Note the author does not use IEEE rounding rules, 
+    # so 38.5 is rounded improperly in the paper
+    mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+                            ceiling(percent),
+                            round(percent, 0)
+                            )
+    )
+)
+
+# counts and frequency by branch of service
+(
+by_branch <- angrist %>% 
+    # missing values implicitly removed in the paper
+    filter(!is.na(branch)) %>% 
+    group_by(branch) %>% 
+    summarise(count = n()) %>% 
+    mutate(percent = round(count * 100 / sum(count), 1)) %>% 
+    # again replicate non-IEEE rounding on 17.5
+    mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+                            floor(percent),
+                            round(percent, 0)
+                            )
+           )
+)
+```
+

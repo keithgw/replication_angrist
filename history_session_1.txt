@@ -133,3 +133,287 @@ grade_inc >= 0
 angrist
 print(angrist)
 savehistory("~/Econometrics/replication/replication_angrist/history_session_1.txt")
+1170+519+413+229+28
+919+1183+258+28
+368+787+937+275+21
+413/2388
+413/2359
+1170/2388
+1180/2359
+519/2388
+519/2359
+229/2359
+229/2388
+28/2388
+28/2359
+by_age <- angrist %>%
+group_by(age_cat) %>%
+summarise(count = n(), percent = n() * 100 / nrow(angrist))
+by_age
+by_age <- angrist %>%
+group_by(age_cat) %>%
+summarise(count = n(), percent = n() * 100 / nrow(angrist) %>% round())
+by_age
+by_age <- angrist %>%
+group_by(age_cat) %>%
+summarise(count = n(), percent = round(n() * 100 / nrow(angrist), 0))
+by_age
+attr(angrist, var.labels)
+attr(angrist, label.table$labage)
+attr(angrist, 'label.table')
+attr(angrist, 'label.table')$labage
+names(attr(angrist, 'label.table')$labage)
+by_age$age_label <- names(attr(angrist, 'label.table')$labage)
+by_age
+by_age <- angrist %>%
+group_by(age_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .x)
+by_age <- angrist %>%
+group_by(age_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+by_age
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = ceiling(n() * 100 / nrow(angrist)))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1))
+)
+?round
+(
+by_age <- angrist %>%
+group_by(age_cat) %>%
+# get summary statistics
+summarise(count = n(),
+percent = as.integer(n() * 100 / nrow(angrist))) %>%
+# add age labels from metadata
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = as.integer(n() * 100 / nrow(angrist)))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = as.integer(n() * 100 / nrow(angrist)))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0))
+)
+mean(is.na(angrist$years_serv_cat))
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent == 38, 39, percent))
+)
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0))
+)
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+39//2
+39 %/% 2
+39 %% 2
+38 %% 2
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+(
+by_branch <- angrist %>%
+group_by(branch) %>%
+summarise(n = n())
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(n = n(),
+percent = round(n * 100 / n, 0)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(n = n(),
+percent = round(n * 100 / sum(n), 0)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(n = n(),
+percent = round(n() * 100 / sum(n), 0)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n(),
+percent = round(n() * 100 / sum(count), 0)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 0))
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1))
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 == 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+floor(percent),
+round(percent, 0)
+)
+)
+)
+by_service
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+floor(percent),
+round(percent, 0)
+)
+)
+)
+savehistory("~/Econometrics/replication/replication_angrist/history_session_1.txt")

@@ -167,6 +167,72 @@ print(angrist)</code></pre>
 ## #   earn86 &lt;dbl&gt;, mardif &lt;dbl&gt;, hs &lt;int&gt;, coll_grad &lt;int&gt;, corresp &lt;int&gt;,
 ## #   voc_tech &lt;int&gt;, ojt_appren &lt;int&gt;, oth_train &lt;int&gt;</code></pre>
 </div>
+<div id="get-summary-statistics" class="section level2">
+<h2>Get Summary Statistics</h2>
+<pre class="r"><code># counts and frequency by age
+(
+by_age &lt;- angrist %&gt;%
+    group_by(age_cat) %&gt;% 
+    # get summary statistics
+    summarise(count = n(), 
+              percent = round(n() * 100 / nrow(angrist), 0)) %&gt;% 
+    # add age labels from metadata
+    bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)</code></pre>
+<pre><code>## # A tibble: 5 × 4
+##   age_label age_cat count percent
+##       &lt;chr&gt;   &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1     30-34      32   368      15
+## 2     35-39      37   787      33
+## 3     40-44      42   937      39
+## 4     45-49      47   275      12
+## 5     50-55      52    21       1</code></pre>
+<pre class="r"><code># counts and frequency by years of service
+(
+by_service &lt;- angrist %&gt;% 
+    group_by(years_serv_cat) %&gt;% 
+    summarise(count = n(),
+              percent = round(n() * 100 / nrow(angrist), 1)
+              ) %&gt;% 
+    # Note the author does not use IEEE rounding rules, 
+    # so 38.5 is rounded improperly in the paper
+    mutate(percent = ifelse(percent %% 2 &gt; 0 &amp; percent - floor(percent) == 0.5,
+                            ceiling(percent),
+                            round(percent, 0)
+                            )
+    )
+)</code></pre>
+<pre><code>## # A tibble: 4 × 3
+##   years_serv_cat count percent
+##           &lt;fctr&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1            1-2   919      39
+## 2            3-5  1183      50
+## 3           6-10   258      11
+## 4          11-15    28       1</code></pre>
+<pre class="r"><code># counts and frequency by branch of service
+(
+by_branch &lt;- angrist %&gt;% 
+    # missing values implicitly removed in the paper
+    filter(!is.na(branch)) %&gt;% 
+    group_by(branch) %&gt;% 
+    summarise(count = n()) %&gt;% 
+    mutate(percent = round(count * 100 / sum(count), 1)) %&gt;% 
+    # again replicate non-IEEE rounding on 17.5
+    mutate(percent = ifelse(percent %% 2 &gt; 0 &amp; percent - floor(percent) == 0.5,
+                            floor(percent),
+                            round(percent, 0)
+                            )
+           )
+)</code></pre>
+<pre><code>## # A tibble: 5 × 3
+##        branch count percent
+##        &lt;fctr&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1        Army  1170      50
+## 2        Navy   519      22
+## 3   Air Force   413      17
+## 4     Marines   229      10
+## 5 Coast Guard    28       1</code></pre>
+</div>
 
 
 
