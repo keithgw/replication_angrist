@@ -1,0 +1,135 @@
+library(foreign) # read .dta files
+setwd('~/Econometrics/replication/replication_angrist/')
+data_file <- '../Angrist1993Replication.dta'
+angrist <- read.dta(data_file)
+str(angrist)
+summary(angrist$branch)
+library(dplyr)   # data wrangling
+attr(angrist, var.labels)
+attr(angrist)
+attr(angrist, var.labels)
+attr(angrist, "var.labels")
+summary(angrist$female)
+summary(as.factor(angrist$femaile))
+summary(as.factor(angrist$female))
+summary(as.factor(angrist$early_avf_era))
+summary(as.factor(angrist$viet_era))
+sum(angrist$viet_era == 0 & angrist$early_avf_era == 0)
+attr(angrist, "label.table")
+summary(angrist$age_cat)
+summary(angrist$agerec)
+unique(angrist$agerec)
+library(ggplot2)
+ggplot(angrist, aes(agerec, age_cat)) + geom_point()
+ggplot(angrist, aes(agerec, age_cat)) + geom_jitter()
+ggplot(angrist, aes(agerec, age_cat)) + geom_jitter(alpha = 0.5)
+unique(angrist$age_cat)
+sum(angrist$age_cat > 27 & angrist$age_cat < 57)
+sum(angrist$age_cat > 27 & angrist$age_cat < 57, na.rm = T)
+sum(angrist$age_cat < 32 & angrist$age_cat > 52, na.rm = T)
+sum(angrist$age_cat < 32 | angrist$age_cat > 52, na.rm = T)
+sum(angrist$age_cat < 4 | angrist$age_cat > 8, na.rm = T)
+sum(angrist$agerec < 4 | angrist$agerec > 8, na.rm = T)
+summary(angrist$years_serv_cat)
+108+157+495+481
+3337 - 2388
+# angrist <-
+angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat)
+# less than 9 years of schooling when entering the military
+# non-negative increment in schooling between military entry and schooling
+)
+data_file <- '../Angrist1993Replication.dta'
+angrist <- read.dta(data_file) %>%
+as_data_frame() # pretty printing
+# angrist <-
+angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat)
+# less than 9 years of schooling when entering the military
+# non-negative increment in schooling between military entry and schooling
+)
+# angrist <-
+angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat),
+# less than 9 years of schooling when entering the military
+entgrade >= 9
+# non-negative increment in schooling between military entry and schooling
+)
+summary(angrist$grade_inc)
+attr(angrist, "var.labels")
+names(angrist)
+# angrist <-
+angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat),
+# less than 9 years of schooling when entering the military
+entgrade >= 9,
+# non-negative increment in schooling between military entry and schooling
+grade_inc >= 0
+)
+# angrist <-
+angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+# age_cat > 27 & age_cat < 57,
+agerec > 3 & agerec < 9,
+# 1 - 15 years of active service
+!is.na(years_serv_cat),
+# less than 9 years of schooling when entering the military
+entgrade >= 9,
+# non-negative increment in schooling between military entry and schooling
+grade_inc >= 0
+)
+angrist <- angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat),
+# less than 9 years of schooling when entering the military
+entgrade >= 9,
+# non-negative increment in schooling between military entry and schooling
+grade_inc >= 0
+)
+angrist
+print(angrist)
+savehistory("~/Econometrics/replication/replication_angrist/history_session_1.txt")
