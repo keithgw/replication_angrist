@@ -118,6 +118,7 @@ $(document).ready(function () {
 
 <pre class="r"><code>library(foreign) # read .dta files
 library(dplyr)   # data wrangling
+library(purrr)   # vectorized iteration
 setwd('~/Econometrics/replication/replication_angrist/')</code></pre>
 <div id="load-the-data" class="section level2">
 <h2>Load the Data</h2>
@@ -232,6 +233,55 @@ by_branch &lt;- angrist %&gt;%
 ## 3   Air Force   413      17
 ## 4     Marines   229      10
 ## 5 Coast Guard    28       1</code></pre>
+<pre class="r"><code># note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables &lt;- attr(angrist, &quot;var.labels&quot;)
+means &lt;- map_dbl(angrist, ~mean(.x, na.rm = TRUE))
+sigmas &lt;- map_dbl(angrist, ~sd(.x, na.rm = TRUE)) # non-IEEE rounding in paper
+means_full &lt;- data_frame(variable = variables,
+                         mean = means,
+                         sd = sigmas)
+print(means_full, n = nrow(means_full))</code></pre>
+<pre><code>## # A tibble: 38 × 3
+##                          variable         mean           sd
+##                             &lt;chr&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1                    Veteran's ID 1.691871e+03 9.632067e+02
+## 2          veteran's final weight 2.815011e+03 2.561202e+03
+## 3                      age recode 5.494975e+00 9.173968e-01
+## 4                         vietnam 1.000000e+00 0.000000e+00
+## 5                9/8/80 - present 1.000000e+00 0.000000e+00
+## 6                 5/8/75 - 9/7/80 1.000000e+00 0.000000e+00
+## 7               Branch of Service           NA 1.076270e+00
+## 8           1=Vietnam Era Service 9.526801e-01 2.123668e-01
+## 9             1=Early AVF Service 1.582915e-01 3.650905e-01
+## 10                   Age Category 3.947487e+01 4.586984e+00
+## 11      Years of Service Category           NA 6.897791e-01
+## 12               1=female, 0=male 0.000000e+00 0.000000e+00
+## 13       Grade Completed at Entry 1.254983e+01 1.747710e+00
+## 14        Highest Grade Completed 1.400209e+01 2.119492e+00
+## 15                Grade Increment 1.452261e+00 1.600371e+00
+## 16            Schooling Increased 6.109715e-01 4.876319e-01
+## 17                        Drafted 2.470687e-01 4.313974e-01
+## 18                        Officer 8.835846e-02 2.838750e-01
+## 19              Currently Married 7.533501e-01 4.311515e-01
+## 20               Married at Entry 1.118090e-01 3.151974e-01
+## 21            Health Affects Wrok 8.500838e-02 2.789526e-01
+## 22                      Non-White 1.201843e-01 3.252450e-01
+## 23 Used any Ed or Train Since Dis 7.747069e-01 4.178627e-01
+## 24      Receive Any Financial Aid 6.222781e-01 4.849191e-01
+## 25        Receive Any Federal Aid 6.281407e-02 2.426791e-01
+## 26               Use the G.I Bill 5.456449e-01 4.980165e-01
+## 27                   Use the VEAP 1.968174e-02 1.389333e-01
+## 28        Use Other VA Assistance 3.266332e-02 1.777911e-01
+## 29          Use Any VA Assistance 5.732831e-01 4.947040e-01
+## 30               Full-Time Worker 9.053601e-01 2.927782e-01
+## 31                  1986 Earnings 2.846756e+04 1.951991e+04
+## 32      Change in Marriage Status 6.415410e-01 5.206901e-01
+## 33 Attended/Completed High School 2.470687e-02 1.552628e-01
+## 34      Attended Coll/Grad School 5.209380e-01 4.996660e-01
+## 35    Participated in Corr Course 6.072027e-02 2.388665e-01
+## 36     Received Voc/Tech Training 2.211055e-01 4.150783e-01
+## 37        Received OJT/Apprentice 1.796482e-01 3.839746e-01
+## 38                 Other Training 6.574539e-02 2.478884e-01</code></pre>
 </div>
 
 

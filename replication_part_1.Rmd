@@ -6,12 +6,13 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 4.5)
 ```
 
 ```{r libraries}
 library(foreign) # read .dta files
 library(dplyr)   # data wrangling
+library(purrr)   # vectorized iteration
 setwd('~/Econometrics/replication/replication_angrist/')
 ```
 
@@ -88,5 +89,16 @@ by_branch <- angrist %>%
                             )
            )
 )
+```
+
+```{r means}
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, ~mean(.x, na.rm = TRUE))
+sigmas <- map_dbl(angrist, ~sd(.x, na.rm = TRUE)) # non-IEEE rounding in paper
+means_full <- data_frame(variable = variables,
+                         mean = means,
+                         sd = sigmas)
+print(means_full, n = nrow(means_full))
 ```
 
