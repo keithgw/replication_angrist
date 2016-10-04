@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 4.5)
 ```
 
+This file represents the R equivalent of a `.do` file from stata. Each line of code is represented in the gray code chunks, and the outputs are shown below each code chunk.
+
 ```{r libraries}
 library(foreign) # read .dta files
 library(dplyr)   # data wrangling

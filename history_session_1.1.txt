@@ -1,0 +1,184 @@
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, mean)
+sigmas <- map_dbl(angrist, sd) # bad rounding again on entgrade
+means_full <- data_frame(variable = variables,
+mean = means,
+sd = sigmas)
+library(foreign) # read .dta files
+library(dplyr)   # data wrangling
+library(purrr)   # vectorized iteration
+setwd('~/Econometrics/replication/replication_angrist/')
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, mean)
+sigmas <- map_dbl(angrist, sd) # bad rounding again on entgrade
+means_full <- data_frame(variable = variables,
+mean = means,
+sd = sigmas)
+data_file <- '../Angrist1993Replication.dta'
+angrist <- read.dta(data_file) %>%
+as_data_frame() # pretty printing
+angrist <- angrist %>%
+filter(
+# no females
+female == 0,
+# Vietnam and early AVF Veterans
+viet_era == 1 | early_avf_era == 1,
+# Aged 30-54 in 1987
+age_cat > 27 & age_cat < 57,
+# 1 - 15 years of active service
+!is.na(years_serv_cat),
+# less than 9 years of schooling when entering the military
+entgrade >= 9,
+# non-negative increment in schooling between military entry and schooling
+grade_inc >= 0
+)
+# demonstrate that the data set matches the sample
+print(angrist)
+# counts and frequency by age
+(
+by_age <- angrist %>%
+group_by(age_cat) %>%
+# get summary statistics
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+# add age labels from metadata
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)
+# counts and frequency by years of service
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+# counts and frequency by branch of service
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+floor(percent),
+round(percent, 0)
+)
+)
+)
+# counts and frequency by age
+(
+by_age <- angrist %>%
+group_by(age_cat) %>%
+# get summary statistics
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+# add age labels from metadata
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)
+# counts and frequency by years of service
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+# counts and frequency by branch of service
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+floor(percent),
+round(percent, 0)
+)
+)
+)
+# counts and frequency by age
+(
+by_age <- angrist %>%
+group_by(age_cat) %>%
+# get summary statistics
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 0)) %>%
+# add age labels from metadata
+bind_cols(data_frame(age_label = names(attr(angrist, 'label.table')$labage)), .)
+)
+# counts and frequency by years of service
+(
+by_service <- angrist %>%
+group_by(years_serv_cat) %>%
+summarise(count = n(),
+percent = round(n() * 100 / nrow(angrist), 1)
+) %>%
+# Note the author does not use IEEE rounding rules,
+# so 38.5 is rounded improperly in the paper
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+ceiling(percent),
+round(percent, 0)
+)
+)
+)
+# counts and frequency by branch of service
+(
+by_branch <- angrist %>%
+# missing values implicitly removed in the paper
+filter(!is.na(branch)) %>%
+group_by(branch) %>%
+summarise(count = n()) %>%
+mutate(percent = round(count * 100 / sum(count), 1)) %>%
+# again replicate non-IEEE rounding on 17.5
+mutate(percent = ifelse(percent %% 2 > 0 & percent - floor(percent) == 0.5,
+floor(percent),
+round(percent, 0)
+)
+)
+)
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, mean)
+sigmas <- map_dbl(angrist, sd) # bad rounding again on entgrade
+means_full <- data_frame(variable = variables,
+mean = means,
+sd = sigmas)
+means_full
+View(means_full)
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, ~mean(na.rm = TRUE))
+sigmas <- map_dbl(angrist, ~sd(na.rm = TRUE)) # bad rounding again on entgrade
+means_full <- data_frame(variable = variables,
+mean = means,
+sd = sigmas)
+# note no consistency in rounding in paper table, sometimes 2 sig figs, sometimes 3
+variables <- attr(angrist, "var.labels")
+means <- map_dbl(angrist, ~mean(.x, na.rm = TRUE))
+sigmas <- map_dbl(angrist, ~sd(.x, na.rm = TRUE)) # bad rounding again on entgrade
+means_full <- data_frame(variable = variables,
+mean = means,
+sd = sigmas)
+View(means_full)
+library(knitr)   # pretty printing
+savehistory("~/Econometrics/replication/replication_angrist/history_session_1.1.txt")
